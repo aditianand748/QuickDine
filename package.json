@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "cloudinary": "^2.10.1",
+    "multer": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/multer": "^2.2.0"
+  }
+}
