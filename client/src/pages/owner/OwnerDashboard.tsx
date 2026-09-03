@@ -10,7 +10,9 @@ import PendingApproval from "../../components/owner/PendingApproval.tsx";
 import RequestRejected from "../../components/owner/RequestRejected.tsx";
 import OwnerBookings from "../../components/owner/OwnerBookings.tsx";
 import OwnerProfileDetails from "../../components/owner/OwnerProfileDetails.tsx";
-import { dummyMyBookingsData, dummyRestaurant } from "../../assets/assets.ts";
+import api from "../../lib/api.ts";
+import toast from "react-hot-toast";
+
 
 export default function OwnerDashboard() {
     const { logout } = useAppContext();
@@ -20,9 +22,23 @@ export default function OwnerDashboard() {
     const [activeTab, setActiveTab] = useState<"bookings" | "details">("bookings");
 
     const fetchOwnerData = async () => {
-        setRestaurant(dummyRestaurant[0]);
-        setBookings(dummyMyBookingsData);
-        setLoading(false);
+        try {
+            setLoading(true);
+            const res = await api.get("/owner/restaurant")
+            setRestaurant(res.data)
+
+            if (res.data) {
+                if (res.data.status === "approved") {
+                    // Fetch bookings
+                    const bookingsRes = await api.get("/owner/bookings")
+                    setBookings(bookingsRes.data)
+                }
+            }
+        } catch (error: any) {
+            toast.error(error?.response?.data?.message || "Failed to load dashboard data");
+        } finally {
+            setLoading(false)
+        }
     };
 
     useEffect(() => {
@@ -81,9 +97,8 @@ export default function OwnerDashboard() {
                             <nav className="flex flex-col gap-1.5">
                                 <button
                                     onClick={() => setActiveTab("bookings")}
-                                    className={`w-full flex items-center gap-3 px-4 py-3 text-xs font-medium tracking-wider uppercase text-left rounded-sm cursor-pointer transition-colors ${
-                                        activeTab === "bookings" ? "bg-primary text-white" : "text-black/55 hover:bg-surface"
-                                    }`}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 text-xs font-medium tracking-wider uppercase text-left rounded-sm cursor-pointer transition-colors ${activeTab === "bookings" ? "bg-primary text-white" : "text-black/55 hover:bg-surface"
+                                        }`}
                                 >
                                     <CalendarIcon size={14} />
                                     Bookings ({bookings.length})
@@ -91,9 +106,8 @@ export default function OwnerDashboard() {
 
                                 <button
                                     onClick={() => setActiveTab("details")}
-                                    className={`w-full flex items-center gap-3 px-4 py-3 text-xs font-medium tracking-wider uppercase text-left rounded-sm cursor-pointer transition-colors ${
-                                        activeTab === "details" ? "bg-primary text-white" : "text-black/55 hover:bg-surface"
-                                    }`}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 text-xs font-medium tracking-wider uppercase text-left rounded-sm cursor-pointer transition-colors ${activeTab === "details" ? "bg-primary text-white" : "text-black/55 hover:bg-surface"
+                                        }`}
                                 >
                                     <SettingsIcon size={14} />
                                     Profile Details

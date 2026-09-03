@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { Upload, Image } from "lucide-react";
-import { dummyRestaurant } from "../../assets/assets.ts";
+import api from "../../lib/api.ts";
 
 interface OwnerProfileDetailsProps {
     restaurant: any;
@@ -93,7 +93,14 @@ export default function OwnerProfileDetails({ restaurant, setRestaurant }: Owner
             if (imageFile) {
                 formData.append("image", imageFile);
             }
-            setRestaurant(dummyRestaurant[0]);
+
+            const res = await api.put("/owner/restaurant", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+            setRestaurant(res.data)
+
             toast.success("Profile details updated successfully!");
         } catch (error: any) {
             toast.error(error?.response?.data?.message || "Update failed");
@@ -250,11 +257,10 @@ export default function OwnerProfileDetails({ restaurant, setRestaurant }: Owner
                                     key={slot}
                                     type="button"
                                     onClick={() => toggleSlot(slot)}
-                                    className={`py-1.5 px-3 text-[10px] border transition-colors cursor-pointer rounded-sm ${
-                                        isSelected
-                                            ? "bg-primary border-primary text-white"
-                                            : "border-outline-variant/40 text-black/55 hover:border-primary"
-                                    }`}
+                                    className={`py-1.5 px-3 text-[10px] border transition-colors cursor-pointer rounded-sm ${isSelected
+                                        ? "bg-primary border-primary text-white"
+                                        : "border-outline-variant/40 text-black/55 hover:border-primary"
+                                        }`}
                                 >
                                     {slot}
                                 </button>

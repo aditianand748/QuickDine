@@ -2,6 +2,7 @@
 import React from "react";
 import { Calendar, Users, Clock } from "lucide-react";
 import toast from "react-hot-toast";
+import api from "../../lib/api";
 
 interface OwnerBookingsProps {
     bookings: any[];
@@ -12,7 +13,10 @@ interface OwnerBookingsProps {
 export default function OwnerBookings({ bookings, setBookings, totalSeats }: OwnerBookingsProps) {
     const handleUpdateBookingStatus = async (bookingId: string, newStatus: string) => {
         try {
-            setBookings((prev) => prev.map((b) => (b._id === bookingId ? { ...b, status: newStatus } : b)));
+
+            await api.put(`/owner/bookings/${bookingId}/status`, { status: newStatus })
+            setBookings((prev) => prev.map((b) => (b._id === bookingId ? { ...b, status: newStatus } : b)))
+
             toast.success(`Booking status updated to ${newStatus}`);
         } catch (error: any) {
             toast.error(error?.response?.data?.message || "Update status failed");
@@ -65,13 +69,12 @@ export default function OwnerBookings({ bookings, setBookings, totalSeats }: Own
 
                             <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
                                 <span
-                                    className={`text-[9px] font-medium tracking-wider uppercase px-2 py-0.5 rounded-sm ${
-                                        b.status === "confirmed"
-                                            ? "bg-blue-100 text-blue-800"
-                                            : b.status === "completed"
-                                              ? "bg-green-100 text-green-800"
-                                              : "bg-error-container text-on-error-container"
-                                    }`}
+                                    className={`text-[9px] font-medium tracking-wider uppercase px-2 py-0.5 rounded-sm ${b.status === "confirmed"
+                                        ? "bg-blue-100 text-blue-800"
+                                        : b.status === "completed"
+                                            ? "bg-green-100 text-green-800"
+                                            : "bg-error-container text-on-error-container"
+                                        }`}
                                 >
                                     {b.status}
                                 </span>
