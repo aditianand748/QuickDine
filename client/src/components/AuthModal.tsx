@@ -68,21 +68,19 @@ export default function AuthModal() {
                 <div className="flex border-b border-outline-variant/20">
                     <button
                         onClick={() => setIsLoginTab(true)}
-                        className={`flex-1 py-5 text-center text-xs font-medium tracking-widest transition-soft cursor-pointer ${
-                            isLoginTab
+                        className={`flex-1 py-5 text-center text-xs font-medium tracking-widest transition-soft cursor-pointer ${isLoginTab
                                 ? "text-primary border-b-2 border-primary bg-surface-container-lowest"
                                 : "text-black/55 hover:text-primary bg-surface-container-low/50"
-                        }`}
+                            }`}
                     >
                         SIGN IN
                     </button>
                     <button
                         onClick={() => setIsLoginTab(false)}
-                        className={`flex-1 py-5 text-center text-xs font-medium tracking-widest transition-soft cursor-pointer ${
-                            !isLoginTab
+                        className={`flex-1 py-5 text-center text-xs font-medium tracking-widest transition-soft cursor-pointer ${!isLoginTab
                                 ? "text-primary border-b-2 border-primary bg-surface-container-lowest"
                                 : "text-black/55 hover:text-primary bg-surface-container-low/50"
-                        }`}
+                            }`}
                     >
                         SIGN UP
                     </button>
